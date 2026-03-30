@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Projects</title>
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background: #0d1117;
+        color: #c9d1d9;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 3rem 1rem;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #f0f6fc;
+        letter-spacing: -0.5px;
+      }
+
+      header p {
+        margin-top: 0.75rem;
+        font-size: 1.1rem;
+        color: #8b949e;
+      }
+
+      #link-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+        width: 100%;
+        max-width: 960px;
+      }
+
+      .card {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .card:hover {
+        border-color: #58a6ff;
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+      }
+
+      .card-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #58a6ff;
+        word-break: break-word;
+      }
+
+      .card-description {
+        font-size: 0.9rem;
+        color: #8b949e;
+        line-height: 1.5;
+        flex: 1;
+      }
+
+      .card-url {
+        font-size: 0.75rem;
+        color: #484f58;
+        word-break: break-all;
+        margin-top: 0.25rem;
+      }
+
+      #error-msg {
+        color: #f85149;
+        font-size: 1rem;
+        margin-top: 2rem;
+      }
+
+      footer {
+        margin-top: 4rem;
+        font-size: 0.8rem;
+        color: #484f58;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1 id="site-title">My Projects</h1>
+      <p id="site-description"></p>
+    </header>
+
+    <div id="link-grid"></div>
+    <p id="error-msg" hidden></p>
+
+    <footer>
+      <p>Edit <code>links.json</code> to add or remove links.</p>
+    </footer>
+
+    <script>
+      async function loadLinks() {
+        const grid = document.getElementById("link-grid");
+        const errorMsg = document.getElementById("error-msg");
+
+        let data;
+        try {
+          const response = await fetch("links.json");
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          data = await response.json();
+        } catch (err) {
+          errorMsg.textContent =
+            "Could not load links.json. Make sure the file exists and is valid JSON.";
+          errorMsg.hidden = false;
+          return;
+        }
+
+        if (data.title) {
+          document.title = data.title;
+          document.getElementById("site-title").textContent = data.title;
+        }
+        if (data.description) {
+          document.getElementById("site-description").textContent =
+            data.description;
+        }
+
+        const links = Array.isArray(data.links) ? data.links : [];
+        if (links.length === 0) {
+          errorMsg.textContent =
+            'No links found. Add entries to the "links" array in links.json.';
+          errorMsg.hidden = false;
+          return;
+        }
+
+        links.forEach(({ name, url, description }) => {
+          if (!url) return;
+          const a = document.createElement("a");
+          a.className = "card";
+          a.href = url;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+
+          const nameEl = document.createElement("div");
+          nameEl.className = "card-name";
+          nameEl.textContent = name || url;
+
+          const descEl = document.createElement("div");
+          descEl.className = "card-description";
+          descEl.textContent = description || "";
+
+          const urlEl = document.createElement("div");
+          urlEl.className = "card-url";
+          urlEl.textContent = url;
+
+          a.append(nameEl, descEl, urlEl);
+          grid.appendChild(a);
+        });
+      }
+
+      loadLinks();
+    </script>
+  </body>
+</html>

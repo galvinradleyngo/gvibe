@@ -1,0 +1,11 @@
+{
+  "title": "My Projects",
+  "description": "A collection of my public repositories and links.",
+  "links": [
+    {
+      "name": "gvibe",
+      "url": "https://github.com/galvinradleyngo/gvibe",
+      "description": "My project hub – replace this entry or add more links below."
+    }
+  ]
+}
