@@ -26,6 +26,21 @@ All links are stored in [`links.json`](links.json). Open that file and edit the 
 
 Commit and push your changes. GitHub Pages will rebuild the site automatically.
 
+## Screenshots
+
+Each card automatically shows a screenshot of the tool when one is available.
+Screenshots are stored in the [`screenshots/`](screenshots/) folder as
+`<name>.jpg`, where `<name>` matches the `name` field in `links.json`.
+
+The **Capture Screenshots** GitHub Actions workflow (`.github/workflows/screenshots.yml`)
+runs every Sunday at 03:00 UTC and can also be triggered manually from the
+[Actions tab](../../actions/workflows/screenshots.yml). It visits every URL in
+`links.json` with a headless Chromium browser and saves a fresh JPEG thumbnail
+for each tool.
+
+To regenerate screenshots manually, trigger the workflow from the Actions tab
+(**Run workflow** → **Run workflow**). New screenshots are committed automatically.
+
 ## Enabling GitHub Pages
 
 1. Go to **Settings → Pages** in this repository.

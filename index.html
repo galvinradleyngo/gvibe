@@ -73,7 +73,7 @@
 
       #link-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.25rem;
         width: 100%;
         max-width: 960px;
@@ -83,18 +83,35 @@
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 1.5rem;
+        overflow: hidden;
         text-decoration: none;
         color: inherit;
         transition: border-color 0.2s, box-shadow 0.2s;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
       }
 
       .card:hover {
         border-color: var(--accent);
         box-shadow: 0 0 0 3px var(--accent-glow);
+      }
+
+      .card-screenshot {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        object-position: top center;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      .card-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
       }
 
       .card-name {
@@ -493,6 +510,22 @@
           const wrapper = document.createElement("div");
           wrapper.className = "card";
 
+          // Screenshot thumbnail — shown only when the image loads successfully.
+          if (link.name) {
+            const img = document.createElement("img");
+            img.src = `screenshots/${link.name}.jpg`;
+            img.alt = `Screenshot of ${link.name}`;
+            img.className = "card-screenshot";
+            img.style.display = "none";
+            img.addEventListener("load", () => { img.style.display = "block"; });
+            img.addEventListener("error", () => { img.remove(); });
+            wrapper.appendChild(img);
+          }
+
+          // Card content (link + actions)
+          const content = document.createElement("div");
+          content.className = "card-content";
+
           const a = document.createElement("a");
           a.href = link.url;
           a.target = "_blank";
@@ -543,7 +576,8 @@
           });
 
           actions.append(editBtn, delBtn);
-          wrapper.append(a, actions);
+          content.append(a, actions);
+          wrapper.append(content);
           grid.appendChild(wrapper);
         });
       }
