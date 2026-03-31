@@ -299,6 +299,7 @@
 
     <script>
       const STORAGE_KEY = "gvibe_links";
+      const REMOVED_KEY = "gvibe_removed";
       // Note: This password is intentionally client-side only. It acts as a
       // lightweight barrier, not true security — anyone viewing the source can
       // see it. For stronger access control a server-side solution is required.
@@ -307,6 +308,7 @@
       let currentLinks = [];
       let defaultData = null;
       let editMode = false;
+      let removedUrls = new Set();
 
       /* ── Modal helpers ── */
       const overlay = document.getElementById("modal-overlay");
@@ -465,7 +467,9 @@
           delBtn.textContent = "Delete";
           delBtn.addEventListener("click", () => {
             if (!confirm(`Delete "${currentLinks[idx].name || currentLinks[idx].url}"?`)) return;
+            const deletedUrl = currentLinks[idx].url;
             currentLinks.splice(idx, 1);
+            if (deletedUrl) removedUrls.add(deletedUrl);
             renderCards(currentLinks);
           });
 
@@ -505,6 +509,7 @@
 
       document.getElementById("save-btn").addEventListener("click", () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLinks));
+        localStorage.setItem(REMOVED_KEY, JSON.stringify([...removedUrls]));
         const status = document.getElementById("save-status");
         status.textContent = "Saved!";
         setTimeout(() => { status.textContent = ""; }, 2500);
@@ -513,6 +518,8 @@
       document.getElementById("reset-btn").addEventListener("click", () => {
         if (!confirm("Reset to default? Your saved changes will be lost.")) return;
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(REMOVED_KEY);
+        removedUrls = new Set();
         currentLinks = defaultData.links.map((l) => ({ ...l }));
         renderCards(currentLinks);
         const status = document.getElementById("save-status");
@@ -550,7 +557,16 @@
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           try {
-            currentLinks = JSON.parse(saved);
+            const savedLinks = JSON.parse(saved);
+            const savedRemovedRaw = localStorage.getItem(REMOVED_KEY);
+            removedUrls = new Set(savedRemovedRaw ? JSON.parse(savedRemovedRaw) : []);
+            const savedUrls = new Set(savedLinks.filter((l) => l.url).map((l) => l.url));
+            // Merge any new cards added by the daily sync that aren't already
+            // present in the user's saved state and haven't been deleted before.
+            const newLinks = (data.links || []).filter(
+              (l) => l.url && !savedUrls.has(l.url) && !removedUrls.has(l.url)
+            );
+            currentLinks = [...savedLinks, ...newLinks];
           } catch (err) {
             console.warn("Failed to parse saved links from localStorage:", err);
             currentLinks = Array.isArray(data.links) ? data.links.map((l) => ({ ...l })) : [];
