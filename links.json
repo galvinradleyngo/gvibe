@@ -116,6 +116,21 @@
       "name": "human-bingo-game",
       "url": "https://galvinradleyngo.github.io/human-bingo-game/",
       "description": "A customizable selfie bingo game"
+    },
+    {
+      "name": "fishmouth",
+      "url": "https://galvinradleyngo.github.io/fishmouth/",
+      "description": ""
+    },
+    {
+      "name": "chinesename",
+      "url": "https://galvinradleyngo.github.io/chinesename/",
+      "description": ""
+    },
+    {
+      "name": "canvasgraphics",
+      "url": "https://galvinradleyngo.github.io/canvasgraphics/",
+      "description": "Create HTML-based Graphical Elements to Enhance Visual elements on Canvas LMS."
     }
   ]
 }
