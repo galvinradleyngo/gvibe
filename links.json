@@ -131,6 +131,11 @@
       "name": "canvasgraphics",
       "url": "https://galvinradleyngo.github.io/canvasgraphics/",
       "description": "Create HTML-based Graphical Elements to Enhance Visual elements on Canvas LMS."
+    },
+    {
+      "name": "qualiapp",
+      "url": "https://galvinradleyngo.github.io/qualiapp/",
+      "description": ""
     }
   ]
 }
