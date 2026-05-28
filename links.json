@@ -136,6 +136,11 @@
       "name": "qualiapp",
       "url": "https://galvinradleyngo.github.io/qualiapp/",
       "description": ""
+    },
+    {
+      "name": "apatable",
+      "url": "https://galvinradleyngo.github.io/apatable/",
+      "description": "APA Table Formatter for researchers"
     }
   ]
 }
