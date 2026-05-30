@@ -141,6 +141,11 @@
       "name": "apatable",
       "url": "https://galvinradleyngo.github.io/apatable/",
       "description": "APA Table Formatter for researchers"
+    },
+    {
+      "name": "apastudio",
+      "url": "https://galvinradleyngo.github.io/apastudio/",
+      "description": "APA Table Formatter for researchers"
     }
   ]
 }
